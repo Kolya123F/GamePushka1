@@ -70,6 +70,10 @@ class Ball:
         )
 
     def hittest(self, obj):
+        if ((self.x - obj.x) ** 2 + (self.y - obj.y) ** 2) ** 0.5 <= self.r + obj.r:
+            return True
+        else:
+            return False
         """Функция проверяет сталкивалкивается ли данный обьект с целью, описываемой в обьекте obj.
 
         Args:
