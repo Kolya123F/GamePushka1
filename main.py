@@ -46,8 +46,20 @@ class Ball:
         и стен по краям окна (размер окна 800х600).
         """
         # FIXME
-        self.x += self.vx
-        self.y -= self.vy
+        if 15 < self.x < 786:
+             self.x +=self.vx
+        else:
+            self.vx=-self.vx
+            self.x+=self.vx
+
+        if self.y < 586:
+            self.vy -= 2
+            self.y -= self.vy
+        else:
+            self.vy=-self.vy
+            self.y -=self.vy
+
+
 
     def draw(self):
         pygame.draw.circle(
