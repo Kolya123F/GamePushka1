@@ -1,4 +1,5 @@
 import math
+import random
 from random import choice
 
 import pygame
@@ -20,6 +21,7 @@ GAME_COLORS = [RED, BLUE, YELLOW, GREEN, MAGENTA, CYAN]
 WIDTH = 800
 HEIGHT = 600
 
+score = 0
 
 class Ball:
     def __init__(self, screen: pygame.Surface, x=40, y=450):
@@ -91,7 +93,7 @@ class Gun:
         self.f2_power = 10
         self.f2_on = 0
         self.an = 1
-        self.color = GREY
+        self.color = BLACK
 
     def fire2_start(self, event):
         self.f2_on = 1
@@ -120,40 +122,70 @@ class Gun:
         if self.f2_on:
             self.color = RED
         else:
-            self.color = GREY
+            self.color = BLACK
 
     def draw(self):
-        pass
-        # FIXIT don't know how to do it
+        "Координаты орудия:"
+        x = 40
+        y = 450
+        h = 3
+        L = 20 + int(self.f2_power / 4 * 3)
+        x1 = x - h * (math.sin(-self.an) + math.cos(-self.an))
+        y1 = y + h * (math.sin(-self.an) - math.cos(-self.an))
+        x2 = x1 + L * math.cos(-self.an)
+        y2 = y1 - L * math.sin(-self.an)
+        x3 = x1 + 2 * h * math.sin(-self.an)
+        y3 = y1 + 2 * h * math.cos(-self.an)
+        x4 = x3 + L * math.cos(-self.an)
+        y4 = y3 - L * math.sin(-self.an)
 
+        pygame.draw.polygon(self.screen, self.color,
+                     [[x1, y1], [x2, y2],
+                      [x4, y4], [x3, y3]])
     def power_up(self):
         if self.f2_on:
             if self.f2_power < 100:
                 self.f2_power += 1
             self.color = RED
         else:
-            self.color = GREY
+            self.color = BLACK
 
 
 class Target:
-    # self.points = 0
-    # self.live = 1
-    # FIXME: don't work!!! How to call this functions when object is created?
-    # self.new_target()
+    def __init__(self, screen):
+        self.points = 0
+        self.live = 1
+        self.screen = screen
+        self.x = random.randint(500, 730)
+        self.y = random.randint(50, 530)
+        self.r = random.randint(20, 50)
+        self.color = RED
 
     def new_target(self):
         """ Инициализация новой цели. """
-        x = self.x = rnd(600, 780)
-        y = self.y = rnd(300, 550)
-        r = self.r = rnd(2, 50)
-        color = self.color = RED
+        self.x = random.randint(600, 780)
+        self.y = random.randint(300, 550)
+        self.r = random.randint(2, 50)
+        self.color = RED
+        self.live = 1
 
     def hit(self, points=1):
         """Попадание шарика в цель."""
         self.points += points
 
     def draw(self):
-        ...
+        pygame.draw.circle(
+            screen,
+            self.color,
+            (self.x, self.y),
+            self.r
+        )
+        pygame.draw.circle(
+            screen,
+            BLACK,
+            (self.x, self.y),
+            self.r + 2, 2
+        )
 
 
 pygame.init()
@@ -163,7 +195,7 @@ balls = []
 
 clock = pygame.time.Clock()
 gun = Gun(screen)
-target = Target()
+target = Target(screen)
 finished = False
 
 while not finished:
@@ -191,6 +223,9 @@ while not finished:
             target.live = 0
             target.hit()
             target.new_target()
+
+            balls = []
+            score += 1
     gun.power_up()
 
 pygame.quit()
