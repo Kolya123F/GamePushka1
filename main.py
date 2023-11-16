@@ -1,6 +1,7 @@
 import math
 import random
 from random import choice
+import numpy as np
 
 import pygame
 
@@ -48,18 +49,21 @@ class Ball:
         и стен по краям окна (размер окна 800х600).
         """
         # FIXME
-        if 15 < self.x < 786:
-             self.x +=self.vx
-        else:
-            self.vx=-self.vx
-            self.x+=self.vx
+        new_x = self.x + self.vx
+        new_y = self.y - self.vy
 
-        if self.y < 586:
-            self.vy -= 2
-            self.y -= self.vy
+        if 15 < new_x < 786:
+            self.x = new_x
         else:
-            self.vy=-self.vy
-            self.y -=self.vy
+            self.vx = -self.vx * 0.6
+            self.vy = -self.vy * 0.8
+        if new_y < 550:
+            self.y = new_y
+        else:
+            self.vy = -self.vy * 0.6
+            self.vx = self.vx * 0.4
+
+        self.vy -= 2
 
 
 
@@ -201,6 +205,10 @@ finished = False
 while not finished:
     screen.fill(WHITE)
     gun.draw()
+    screen.blit(pygame.font.SysFont('Verdana', 40).render(str(score), False, (0, 0, 0)), (30, 20))
+    screen.blit(
+            pygame.font.SysFont('Verdana', 20).render('Использовано шаров: ' + str(len(balls)), False, (0, 0, 0)),
+            (200, 40))
     target.draw()
     for b in balls:
         b.draw()
