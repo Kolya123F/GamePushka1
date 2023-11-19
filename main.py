@@ -159,17 +159,18 @@ class Target1:
         self.points = 0
         self.live = 1
         self.screen = screen
-        self.x = random.randint(500, 730 )
-        self.y = random.randint(50, 530)
-        self.r = random.randint(20, 50)
-        self.color = RED
+        self.x = random.randint(700, 740)
+        self.y = random.randint(100, 150)
+        self.r = random.randint(25, 50)
+        self.vy = random.randint(-5, 5)
+        self.color = BLUE
 
     def new_target(self):
         """ Инициализация новой цели. """
-        self.x = random.randint(500, 600)
+        self.x = random.randint(700, 740)
         self.y = random.randint(300, 550)
-        self.r = random.randint(10, 25)
-        self.color = RED
+        self.r = random.randint(25, 50)
+        self.color = BLUE
         self.live = 1
 
     def hit(self, points=1):
@@ -189,24 +190,51 @@ class Target1:
             (self.x, self.y),
             self.r + 2, 2
         )
+    def move(self):
+        """
+        Переместить уель по прошествии единицы времени.
+        Метод описывает перемещение цели за один кадр перерисовки. То есть, обновляет значения
+        self.x и self.y с учетом скоростей self.vx и self.vy
+        """
+
+        self.y -= self.vy
+        if (self.y + self.r >= HEIGHT - 200) and (self.vy < 0):
+            self.vy *= -1
+        elif (self.y - self.r <= 0) and (self.vy > 0):
+            self.vy *= -1
+
 
 class Target2:
     def __init__(self, screen):
         self.points = 0
         self.live = 1
         self.screen = screen
-        self.x = random.randint(500, 730)
+        self.x = random.randint(550, 600)
         self.y = random.randint(50, 530)
         self.r = random.randint(20, 50)
+        self.vy = random.randint(-5, 5)
         self.color = RED
 
     def new_target(self):
         """ Инициализация новой цели. """
-        self.x = random.randint(600, 780)
-        self.y = random.randint(300, 550)
-        self.r = random.randint(35, 40)
+        self.x=random.randint(550, 600)
+        self.y = random.randint(50, 530)
+        self.r = random.randint(10, 15)
+        self.vy = random.randint(-5, 5)
         self.color = RED
         self.live = 1
+    def move(self):
+        """
+        Переместить уель по прошествии единицы времени.
+        Метод описывает перемещение цели за один кадр перерисовки. То есть, обновляет значения
+        self.x и self.y с учетом скоростей self.vx и self.vy
+        """
+
+        self.y -= self.vy
+        if (self.y + self.r >= HEIGHT - 200) and (self.vy < 0):
+            self.vy *= -1
+        elif (self.y - self.r <= 0) and (self.vy > 0):
+            self.vy *= -1
 
     def hit(self, points=1):
         """Попадание шарика в цель."""
@@ -246,6 +274,8 @@ while not finished:
             (200, 40))
     target1.draw()
     target2.draw()
+    target2.move()
+    target1.move()
     for b in balls:
         b.draw()
     pygame.display.update()
