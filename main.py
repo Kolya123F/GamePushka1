@@ -1,7 +1,6 @@
 import math
 import random
 from random import choice
-import numpy as np
 
 import pygame
 
@@ -155,21 +154,21 @@ class Gun:
             self.color = BLACK
 
 
-class Target:
+class Target1:
     def __init__(self, screen):
         self.points = 0
         self.live = 1
         self.screen = screen
-        self.x = random.randint(500, 730)
+        self.x = random.randint(500, 730 )
         self.y = random.randint(50, 530)
         self.r = random.randint(20, 50)
         self.color = RED
 
     def new_target(self):
         """ Инициализация новой цели. """
-        self.x = random.randint(600, 780)
+        self.x = random.randint(500, 600)
         self.y = random.randint(300, 550)
-        self.r = random.randint(2, 50)
+        self.r = random.randint(10, 25)
         self.color = RED
         self.live = 1
 
@@ -191,6 +190,41 @@ class Target:
             self.r + 2, 2
         )
 
+class Target2:
+    def __init__(self, screen):
+        self.points = 0
+        self.live = 1
+        self.screen = screen
+        self.x = random.randint(500, 730)
+        self.y = random.randint(50, 530)
+        self.r = random.randint(20, 50)
+        self.color = RED
+
+    def new_target(self):
+        """ Инициализация новой цели. """
+        self.x = random.randint(600, 780)
+        self.y = random.randint(300, 550)
+        self.r = random.randint(35, 40)
+        self.color = RED
+        self.live = 1
+
+    def hit(self, points=1):
+        """Попадание шарика в цель."""
+        self.points += points
+
+    def draw(self):
+        pygame.draw.circle(
+            screen,
+            self.color,
+            (self.x, self.y),
+            self.r
+        )
+        pygame.draw.circle(
+            screen,
+            BLACK,
+            (self.x, self.y),
+            self.r + 2, 2
+        )
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -199,7 +233,8 @@ balls = []
 
 clock = pygame.time.Clock()
 gun = Gun(screen)
-target = Target(screen)
+target1 = Target1(screen)
+target2 = Target2(screen)
 finished = False
 
 while not finished:
@@ -209,7 +244,8 @@ while not finished:
     screen.blit(
             pygame.font.SysFont('Verdana', 20).render('Использовано шаров: ' + str(len(balls)), False, (0, 0, 0)),
             (200, 40))
-    target.draw()
+    target1.draw()
+    target2.draw()
     for b in balls:
         b.draw()
     pygame.display.update()
@@ -227,10 +263,17 @@ while not finished:
 
     for b in balls:
         b.move()
-        if b.hittest(target) and target.live:
-            target.live = 0
-            target.hit()
-            target.new_target()
+        if b.hittest(target1) and target1.live:
+            target1.live = 0
+            target1.hit()
+            target1.new_target()
+
+            balls = []
+            score +=1
+        if b.hittest(target2) and target2.live:
+            target2.live = 0
+            target2.hit()
+            target2.new_target()
 
             balls = []
             score += 1
