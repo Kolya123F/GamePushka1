@@ -1,6 +1,7 @@
 import math
 import random
 from random import choice
+import numpy as np
 
 import pygame
 
@@ -156,20 +157,25 @@ class Gun:
 
 class Target1:
     def __init__(self, screen):
+        self.R = random.randint(30, 40)
+        self.vx = random.randint(3, 5)
         self.points = 0
         self.live = 1
         self.screen = screen
-        self.x = random.randint(700, 740)
-        self.y = random.randint(100, 150)
-        self.r = random.randint(25, 50)
-        self.vy = random.randint(-5, 5)
+        self.x = random.randint(720, 740)
+        self.y = random.randint(350, 450)
+        self.dvy = 0.5
+        self.r = random.randint(25, 33)
+        self.vy = random.randint(2, 5)
         self.color = BLUE
 
     def new_target(self):
         """ Инициализация новой цели. """
-        self.x = random.randint(700, 740)
-        self.y = random.randint(300, 550)
-        self.r = random.randint(25, 50)
+        self.R = random.randint(30, 40)
+        self.x = random.randint(720, 740)
+        self.y = random.randint(350, 450)
+        self.dvy = 0.5
+        self.r = random.randint(25, 33)
         self.color = BLUE
         self.live = 1
 
@@ -197,30 +203,31 @@ class Target1:
         self.x и self.y с учетом скоростей self.vx и self.vy
         """
 
-        self.y -= self.vy
-        if (self.y + self.r >= HEIGHT - 200) and (self.vy < 0):
-            self.vy *= -1
-        elif (self.y - self.r <= 0) and (self.vy > 0):
-            self.vy *= -1
+        self.y += self.R*np.sin(self.vy)
+        self.vy +=self.dvy
 
 
 class Target2:
     def __init__(self, screen):
+        self.omega = random.randint(10, 10)
+        self.R=random.randint(4, 6)
         self.points = 0
         self.live = 1
         self.screen = screen
-        self.x = random.randint(550, 600)
+        self.x = random.randint(560, 600)
         self.y = random.randint(50, 530)
-        self.r = random.randint(20, 50)
-        self.vy = random.randint(-5, 5)
+        self.r = random.randint(10, 15)
+        self.vy = random.randint(2, 5)
         self.color = RED
 
     def new_target(self):
         """ Инициализация новой цели. """
-        self.x=random.randint(550, 600)
+        self.omega = random.randint(10, 10)
+        self.R=random.randint(4, 6)
+        self.x=random.randint(560, 600)
         self.y = random.randint(50, 530)
         self.r = random.randint(10, 15)
-        self.vy = random.randint(-5, 5)
+        self.vy = random.randint(2, 5)
         self.color = RED
         self.live = 1
     def move(self):
@@ -235,6 +242,8 @@ class Target2:
             self.vy *= -1
         elif (self.y - self.r <= 0) and (self.vy > 0):
             self.vy *= -1
+        self.x+=self.R*np.cos(self.omega)
+        self.omega+=0.4
 
     def hit(self, points=1):
         """Попадание шарика в цель."""
