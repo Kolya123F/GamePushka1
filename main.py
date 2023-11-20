@@ -90,24 +90,24 @@ class Ball:
 
 class Target1:
     def __init__(self, screen):
-        self.R = random.randint(30, 40)
+        self.R = random.randint(40, 50)
         self.vx = random.randint(3, 5)
         self.points = 0
         self.live = 1
         self.screen = screen
         self.x = random.randint(720, 740)
-        self.y = random.randint(350, 450)
-        self.dvy = 0.5
+        self.y = 300
+        self.dvy = 1
         self.r = random.randint(25, 33)
         self.vy = random.randint(2, 5)
         self.color = BLUE
 
     def new_target(self):
         """ Инициализация новой цели. """
-        self.R = random.randint(30, 40)
+        self.R = random.randint(40, 50)
         self.x = random.randint(720, 740)
-        self.y = random.randint(350, 450)
-        self.dvy = 0.5
+        self.y = 300
+        self.dvy = 1
         self.r = random.randint(25, 33)
         self.color = BLUE
         self.live = 1
@@ -144,7 +144,7 @@ class Target1:
 class Target2:
     def __init__(self, screen):
         self.omega = random.randint(10, 10)
-        self.R = random.randint(4, 6)
+        self.R = random.randint(8, 10)
         self.points = 0
         self.live = 1
         self.screen = screen
@@ -157,7 +157,7 @@ class Target2:
     def new_target(self):
         """ Инициализация новой цели. """
         self.omega = random.randint(10, 10)
-        self.R=random.randint(4, 6)
+        self.R=random.randint(8, 10)
         self.x=random.randint(560, 600)
         self.y = random.randint(50, 530)
         self.r = random.randint(10, 15)
@@ -178,6 +178,7 @@ class Target2:
         elif (self.y - self.r <= 0) and (self.vy > 0):
             self.vy *= -1
         self.x += self.R*np.cos(self.omega)
+        self.y +=self.R*np.sin(self.omega)
         self.omega += 0.4
 
     def hit(self, points=1):
